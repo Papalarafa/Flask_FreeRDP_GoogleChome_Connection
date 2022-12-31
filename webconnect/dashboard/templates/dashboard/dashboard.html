@@ -1,0 +1,60 @@
+{% extends 'dashboard/layout.html' %}
+{% block content %}
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+        </ol>
+    </nav>
+    {% if dblenstatus == "empty" %}
+        <h3 class="pb-3 mb-4 border-bottom">Connections</h3>
+        <div class="alert alert-warning d-flex align-items-center" role="alert">
+            <i class="bi bi-info-circle me-2"></i>
+            <div>No Database found for Connections.</div>
+        </div>
+    {% else %}
+        <h3 class="pb-3 mb-4 border-bottom">Connections</h3>
+        <table class="table tamble-sm table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Protocol</th>
+                    <th scope="col">Connection Name</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in connection_db.items %}
+                    <tr>
+                        <td>{{i.id}}</td>
+                        <td>{{i.protocol}}</td>
+                        <td>{{i.connection_name}}</td>
+                        <td>
+                            {% if i.protocol == "FreeRDP" %}
+                                <a class="btn btn-sm btn-danger" href="{{url_for('freerdp.delete_freerdp_conn',connid=i.id)}}" role="button">Delete</a>
+                                <a class="btn btn-sm btn-secondary" href="{{url_for('freerdp.edit_freerdp',connid=i.id)}}" role="button">Edit</a>
+                                <a class="btn btn-sm btn-success" href="#" role="button">Launch</a>
+                            {% else %}
+                                <a class="btn btn-sm btn-danger" href="{{url_for('chrome.delete_chrome_conn',connid=i.id)}}" role="button">Delete</a>
+                                <a class="btn btn-sm btn-secondary" href="{{url_for('chrome.edit_chrome',connid=i.id)}}" role="button">Edit</a>
+                                <a class="btn btn-sm btn-success" href="#" role="button">Launch</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="rounded-0">
+            {% for page_num in connection_db.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2) %}
+              {% if page_num %}
+                {% if connection_db.page == page_num %}
+                  <a class="btn btn-primary btn-sm mt-2" href="{{ url_for('dashboard.dashboard',page=page_num)}}">{{ page_num }}</a>
+                {% else %}
+                  <a class="btn btn-outline-info mt-2" href="{{ url_for('dashboard.dashboard',page=page_num)}}">{{ page_num }}</a>
+                {% endif %}  
+              {% else %}
+                  ...
+              {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock content %}

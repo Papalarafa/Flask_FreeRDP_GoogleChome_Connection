@@ -1,0 +1,42 @@
+{% extends 'dashboard/layout.html'%}
+{% block content %}
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{url_for('dashboard.dashboard')}}">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create Connection</li>
+        </ol>
+    </nav>
+    <h3 class="pb-3 mb-4 border-bottom">Google Chrome</h3>
+    <form action="" method="post">
+        {{form.hidden_tag()}}
+        <div class="row mb-3">
+          <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Connection Name</label>
+          {% if form.connection_name.errors %}
+            {{form.connection_name(class="form-control w-75 is-invalid")}}
+            <div class="invalid-feedback">
+                {% for error in form.connection_name.errors %}
+                    <span>{{error}}</span>
+                {% endfor %}
+            </div>
+          {% else %}
+            {{form.connection_name(class="form-control w-75")}}
+          {% endif %}
+        </div>
+        <div class="row mb-3">
+            <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">URL Address</label>
+            {% if form.url_address.errors %}
+              {{form.url_address(class="form-control w-75 is-invalid")}}
+              <div class="invalid-feedback">
+                  {% for error in form.url_address.errors %}
+                      <span>{{error}}</span>
+                  {% endfor %}
+              </div>
+            {% else %}
+              {{form.url_address(class="form-control w-75")}}
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{form.submit(class="btn btn-success btn-sm")}}
+        </div>
+    </form>
+{% endblock content %}
