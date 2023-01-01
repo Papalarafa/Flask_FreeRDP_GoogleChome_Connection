@@ -20,5 +20,5 @@ def dashboard():
     if len(ConnectionDB.query.all()) == 0:
         db_len_status = "empty"
     # Connection database record
-    connection_db = ConnectionDB.query.order_by(ConnectionDB.id).paginate(page=page,per_page=10)
+    connection_db = ConnectionDB.query.order_by(ConnectionDB.id).paginate(page=page,per_page=5)
     return render_template('dashboard/dashboard.html',dblenstatus=db_len_status,connection_db=connection_db,total_freerdp_conn=total_freerdp_conn,total_chrome_conn=total_chrome_conn)

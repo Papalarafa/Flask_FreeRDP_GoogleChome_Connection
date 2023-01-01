@@ -6,6 +6,12 @@ from webconnect.models import ConnectionDB
 # Blueprint object
 freerdp_obj = Blueprint('freerdp',__name__,template_folder='templates')
 
+
+# Build FreeRDP Commandline and Desktop file
+def freerdp_cmd():
+    default_cmd = ["xfreerdp","/cert-ignore","/w:800","/h:600","/bpp:24"]
+    pass
+
 # Add FreeRDP Connection
 @freerdp_obj.route('/add/freerdp',methods=['GET','POST'])
 def add_freerdp():
@@ -14,7 +20,14 @@ def add_freerdp():
     total_freerdp_conn = len(ConnectionDB.query.filter_by(protocol="FreeRDP").all())
     # Total Google Chrome Connections
     total_chrome_conn = len(ConnectionDB.query.filter_by(protocol="Google Chrome").all())
+    # FreeRDP command dict.
+    freerdp_cmd_dict = {}
     if form.validate_on_submit():
+        freerdp_cmd_dict["connection_name"] = form.connection_name.data
+        freerdp_cmd_dict["server"] = form.server_address.data
+        freerdp_cmd_dict["fullscreen"] = request.form.getlist("FullScreen")
+        freerdp_cmd_dict["disablenla"] = request.form.getlist("DisableNLA")
+        
         freerdp_db = ConnectionDB(connection_name=form.connection_name.data,address=form.server_address.data,protocol="FreeRDP",parameters=form.parameters.data)
         db.session.add(freerdp_db)
         db.session.commit()
