@@ -11,16 +11,7 @@
         {{form.hidden_tag()}}
         <div class="row mb-3">
           <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Connection Name</label>
-          {% if form.connection_name.errors %}
-            {{form.connection_name(class="form-control w-75 is-invalid")}}
-            <div class="invalid-feedback">
-                {% for error in form.connection_name.errors %}
-                    <span>{{error}}</span>
-                {% endfor %}
-            </div>
-          {% else %}
-            {{form.connection_name(class="form-control w-75",value=freerdpconnection.connection_name)}}
-          {% endif %}
+            {{form.connection_name(class="form-control w-75",value=freerdpconnection.connection_name,readonly="readonly")}}
         </div>
         <div class="row mb-3">
             <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Server Address</label>
@@ -37,16 +28,12 @@
         </div>
         <div class="row mb-3">
             <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Parameters</label>
-            {% if form.parameters.errors %}
-              {{form.parameters(class="form-control w-75 is-invalid")}}
-              <div class="invalid-feedback">
-                  {% for error in form.parameters.errors %}
-                      <span>{{error}}</span>
-                  {% endfor %}
-              </div>
-            {% else %}
-              {{form.parameters(class="form-control w-75",value=freerdpconnection.parameters)}}
-            {% endif %}
+            <div class="btn-group col-sm-5" role="group" aria-label="Basic checkbox toggle button group">
+                <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off" name="FullScreen" value="yes">
+                <label class="btn btn-outline-primary" for="btncheck1">Full Screen</label>
+                <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off" name="DisableNLA" value="yes">
+                <label class="btn btn-outline-primary" for="btncheck2">Disable NLA</label>
+            </div>
         </div>
         <div class="mb-3">
             {{form.submit(class="btn btn-success btn-sm")}}
