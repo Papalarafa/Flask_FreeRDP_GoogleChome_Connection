@@ -1,31 +1,55 @@
 {% extends 'install_updates/layout.html'%}
 {% block content %}
-<h6 class="border-bottom pb-2 mb-0">Recent installed</h6>
-<div class="d-flex text-muted pt-3">
-  <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
-
-  <p class="pb-3 mb-0 small lh-sm border-bottom">
-    <strong class="d-block text-gray-dark">@username</strong>
-    Some representative placeholder content, with some information about this user. Imagine this being some sort of status update, perhaps?
-  </p>
-</div>
-<div class="d-flex text-muted pt-3">
-  <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"/><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>
-
-  <p class="pb-3 mb-0 small lh-sm border-bottom">
-    <strong class="d-block text-gray-dark">@username</strong>
-    Some more representative placeholder content, related to this other user. Another status update, perhaps.
-  </p>
-</div>
-<div class="d-flex text-muted pt-3">
-  <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"/><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>
-
-  <p class="pb-3 mb-0 small lh-sm border-bottom">
-    <strong class="d-block text-gray-dark">@username</strong>
-    This user also gets some representative placeholder content. Maybe they did something interesting, and you really want to highlight this in the recent updates.
-  </p>
-</div>
-<small class="d-block text-end mt-3">
-  <a href="#">All updates</a>
-</small>
+  <h6 class="border-bottom pb-2 mb-0">Current Installed Versions</h6>
+  <!--FreeRDP-->
+  {% if is_freerdp == "nop" %}
+    <div class="d-flex text-muted pt-3">
+      <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e74c3c"/><text class="fw-bold fs-3" x="20%" y="50%" fill="#ffff" dy=".3em">F</text></svg>
+        <p class="pb-3 mb-0 small lh-base text-dark">
+          <strong class="d-block text-dark">FreeRDP</strong>
+          Currently FreeRDP is not installed in your system. For updated version of FreeRDP, checkout <a href="https://packages.ubuntu.com/search?keywords=freerdp" target="_blank">Ubuntu - Package freerdp-x11</a><br>
+          Run below command from your terminal, for installing FreeRDP.
+        </p>
+    </div>
+    <div class="alert alert-dark" role="alert">
+      <p class="font-monospace">$ sudo apt-get update</p>
+      <p class="font-monospace">$ sudo apt-get install -y freerdp-x11</p>
+    </div>
+  {% else %}
+    <div class="d-flex text-muted pt-3">
+      <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#27ae60"/><text class="fw-bold fs-3" x="20%" y="50%" fill="#ffff" dy=".3em">F</text></svg>
+        <p class="pb-3 mb-0 small lh-base border-bottom text-dark">
+          <strong class="d-block text-dark">FreeRDP</strong>
+          Currently installed version of FreeRDP in your system is : <span class="badge bg-primary">{{is_freerdp}}</span>  <br>
+          For updated version of FreeRDP, checkout <a href="https://packages.ubuntu.com/search?keywords=freerdp" target="_blank">Ubuntu - Package freerdp-x11</a>
+        </p>
+    </div>
+  {% endif %}
+  <!--Google Chrome Browser-->
+  {% if is_google == "nop" %}
+    <div class="d-flex text-muted pt-3">
+      <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e74c3c"/><text class="fw-bold fs-3" x="20%" y="50%" fill="#ffff" dy=".3em">G</text></svg>
+        <p class="pb-3 mb-0 small lh-base border-bottom text-dark">
+          <strong class="d-block text-dark">Google Chrome</strong>
+          Currently Google Chrome Browser is not installed in your system. For latest news and updates on Google Chrome, checkout <a href="https://www.google.com/intl/en_in/chrome/" target="_blank">Google Chrome Browser</a><br>
+          Run below command from your terminal, for installing Google Chrome Browser.
+        </p>
+    </div>
+    <div class="alert alert-dark" role="alert">
+      <p class="font-monospace">$ sudo apt-get update</p>
+      <p class="font-monospace">$ wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -</p>
+      <p class="font-monospace">$ sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'</p>
+      <p class="font-monospace">$ sudo apt-get update</p>
+      <p class="font-monospace">$ sudo apt install google-chrome-stable</p>
+    </div>
+  {% else %}
+    <div class="d-flex text-muted pt-3">
+      <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#27ae60"/><text class="fw-bold fs-3" x="20%" y="50%" fill="#ffff" dy=".3em">G</text></svg>
+        <p class="pb-3 mb-0 small lh-base border-bottom text-dark">
+          <strong class="d-block text-dark">Google Chrome</strong>
+          Currently installed version of Google Chrome in your system is : <span class="badge bg-primary">{{is_google}}</span>  <br>
+          For latest news and updates on Google Chrome, checkout <a href="https://www.google.com/intl/en_in/chrome/" target="_blank">Google Chrome Browser</a>
+        </p>
+    </div>
+  {% endif %}  
 {% endblock content %}
