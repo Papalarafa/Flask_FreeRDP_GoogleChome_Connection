@@ -36,18 +36,6 @@
             {% endif %}
         </div>
         <div class="row mb-3">
-          <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Username</label>
-          {{form.user_name(class="form-control w-50")}}
-        </div>
-        <div class="row mb-3">
-          <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Password</label>
-          {{form.user_password(class="form-control w-50")}}
-        </div>
-        <div class="row mb-3">
-          <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Domain</label>
-          {{form.domain_name(class="form-control w-50")}}
-        </div>
-        <div class="row mb-3">
           <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Parameters</label>
           <div class="col-sm-6">
             <div class="accordion" id="accordionExample">
@@ -84,7 +72,15 @@
                   <div class="row">
                     <label class="col-form-label mt-3" for="autoSizingCheck">Network connection type</label>
                     <div class="col-sm-5">
-                      {{form.network_connection_type(class="form-select")}}
+                      <select class="form-select" name="select-network-connection" aria-label="Default select example">
+                        <option value="none">None</option>
+                        <option value="auto">Auto-detect</option>
+                        <option value="modem">Modem</option>
+                        <option value="broadband-low">Low performance broadband</option>
+                        <option value="broadband-high">High performance broadband</option>
+                        <option value="wan">WAN</option>
+                        <option value="lan">LAN</option>
+                      </select>
                     </div>
                   </div>
                   </div>
