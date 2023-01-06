@@ -7,42 +7,116 @@
         </ol>
     </nav>
     <h3 class="pb-3 mb-4 border-bottom">FreeRDP</h3>
-    <form class="form-floating" action="" method="post">
+    <form action="" method="post">
         {{form.hidden_tag()}}
         <div class="row mb-3">
           <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Connection Name</label>
           {% if form.connection_name.errors %}
-            {{form.connection_name(class="form-control w-75 is-invalid")}}
+            {{form.connection_name(class="form-control w-50 is-invalid")}}
             <div class="invalid-feedback">
                 {% for error in form.connection_name.errors %}
                     <span>{{error}}</span>
                 {% endfor %}
             </div>
           {% else %}
-            {{form.connection_name(class="form-control w-75")}}
+            {{form.connection_name(class="form-control w-50")}}
           {% endif %}
         </div>
         <div class="row mb-3">
-            <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Server Address</label>
+            <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Server</label>
             {% if form.server_address.errors %}
-              {{form.server_address(class="form-control w-75 is-invalid")}}
+              {{form.server_address(class="form-control w-50 is-invalid")}}
               <div class="invalid-feedback">
                   {% for error in form.server_address.errors %}
                       <span>{{error}}</span>
                   {% endfor %}
               </div>
             {% else %}
-              {{form.server_address(class="form-control w-75")}}
+              {{form.server_address(class="form-control w-50")}}
             {% endif %}
         </div>
         <div class="row mb-3">
-            <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Parameters</label>
-            <div class="btn-group col-sm-5" role="group" aria-label="Basic checkbox toggle button group">
-              <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off" name="FullScreen" value="yes">
-              <label class="btn btn-outline-primary" for="btncheck1">Full Screen</label>
-              <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off" name="DisableNLA" value="yes">
-              <label class="btn btn-outline-primary" for="btncheck2">Disable NLA</label>
+          <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Username</label>
+          {{form.user_name(class="form-control w-50")}}
+        </div>
+        <div class="row mb-3">
+          <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Password</label>
+          {{form.user_password(class="form-control w-50")}}
+        </div>
+        <div class="row mb-3">
+          <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Domain</label>
+          {{form.domain_name(class="form-control w-50")}}
+        </div>
+        <div class="row mb-3">
+          <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Parameters</label>
+          <div class="col-sm-6">
+            <div class="accordion" id="accordionExample">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Basic Settings
+                  </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <div class="row">
+                      <div class="col-auto">
+                        {{form.resolution_fullscreen(class="form-check-input")}}
+                        <label class="form-check-label" for="autoSizingCheck">FullScreen</label>
+                      </div>
+                      <div class="col-auto">
+                        {{form.resolution_multimon(class="form-check-input")}}
+                        <label class="form-check-label" for="autoSizingCheck">Enable multi monitor</label>
+                      </div>
+                      <div class="col-auto">
+                        {{form.resolution_span(class="form-check-input")}}
+                        <label class="form-check-label" for="autoSizingCheck">Span screen over multiple monitors</label>
+                      </div>
+                      <div class="col-auto">
+                        {{form.restric_admin_mode(class="form-check-input")}}
+                        <label class="form-check-label" for="autoSizingCheck">Restricted admin mode</label>
+                      </div>
+                      <div class="col-auto">
+                        {{form.float_bar(class="form-check-input")}}
+                        <label class="form-check-label" for="autoSizingCheck">Floatbar</label>
+                      </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-form-label mt-3" for="autoSizingCheck">Network connection type</label>
+                    <div class="col-sm-5">
+                      {{form.network_connection_type(class="form-select")}}
+                    </div>
+                  </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Advanced Settings
+                  </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                  <div class="accordion-body">
+                    <div class="row">
+                      <div class="col-auto">
+                        {{form.sec_nla(class="form-check-input")}}
+                        <label class="form-check-label" for="autoSizingCheck">Enable NLA protocol security</label>
+                      </div>
+                      <div class="col-auto">
+                        {{form.sec_rdp(class="form-check-input")}}
+                        <label class="form-check-label" for="autoSizingCheck">Enable RDP protocol security</label>
+                      </div>
+                      <div class="col-auto">
+                        {{form.sec_tls(class="form-check-input")}}
+                        <label class="form-check-label" for="autoSizingCheck">Enable TLS protocol security</label>
+                      </div>
+                  </div>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
         <div class="mb-3">
             {{form.submit(class="btn btn-success btn-sm")}}
         </div>

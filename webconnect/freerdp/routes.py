@@ -1,7 +1,7 @@
 from flask import Blueprint,render_template,url_for,flash,redirect,request
 from webconnect import app,db
 from webconnect.freerdp.forms import FreeRDPForm,UpdateFreeRDPForm
-from webconnect.models import ConnectionDB
+from webconnect.models import ConnectionDB,FreerdpDB
 import os,sys,stat
 import shutil
 
@@ -10,19 +10,20 @@ freerdp_obj = Blueprint('freerdp',__name__,template_folder='templates')
 
 
 # Build FreeRDP Commandline and Desktop file
-def build_freerdp_cmd(get_cmd:dict):
+def build_freerdp_launch_script(freerdp_conn_name:str,cmd:list):
+    # FreeRDP Launch
+    launch = ' '.join([str(i) for i in cmd])
     # Create working directory environment
     GET_CURRENT_USER = os.path.expanduser('~')
-    CONN_DIR = get_cmd["connection_name"]
-    CONN_PATH = GET_CURRENT_USER+"/.webconnect/"+CONN_DIR
+    CONN_PATH = GET_CURRENT_USER+"/.webconnect/"+freerdp_conn_name
     os.makedirs(CONN_PATH,exist_ok=True)
     # Create executable shell script
-    with open(CONN_PATH+"/"+CONN_DIR+".sh","w") as file:
-        lines = ["#!/bin/bash\n",get_cmd["CMD"]+"\n"]
-        file.writelines(lines)
-        file.close()
+    with open(CONN_PATH+"/"+freerdp_conn_name+"launch.sh","w") as file:
+         lines = ["#!/bin/bash\n",launch+"\n"]
+         file.writelines(lines)
+         file.close()
     # Change Permission
-    os.chmod(CONN_PATH+"/"+CONN_DIR+".sh",stat.S_IRWXU)
+    os.chmod(CONN_PATH+"/"+freerdp_conn_name+"launch.sh",stat.S_IRWXU)
 
 # Add FreeRDP Connection
 @freerdp_obj.route('/add/freerdp',methods=['GET','POST'])
@@ -32,31 +33,94 @@ def add_freerdp():
     total_freerdp_conn = len(ConnectionDB.query.filter_by(protocol="FreeRDP").all())
     # Total Google Chrome Connections
     total_chrome_conn = len(ConnectionDB.query.filter_by(protocol="Google Chrome").all())
-    # FreeRDP cmd dict
-    freerdp_dict = {}
+    # # FreeRDP cmd dict
+    # freerdp_dict = {}
 
     if form.validate_on_submit():
-        DISPLAY = ""
-        NLA = " "
-        # Create FreeRDP command line
-        freerdp_dict["connection_name"] = request.form.get("connection_name")
-        if request.form.get("FullScreen") == "yes":
-            DISPLAY = "/f"
+
+        # FreeRDP Command List
+        freerdp_cmd_list = ["xfreerdp","/cert-ignore"]
+        # Check for username
+        if len(form.user_name.data) != 0:
+            freerdp_cmd_list.append("/u:"+form.user_name.data)
+        # Check for password
+        if len(form.user_password.data) != 0:
+            freerdp_cmd_list.append("/p:"+form.user_password.data)
+        # Check for Domain
+        if len(form.domain_name.data) != 0:
+            freerdp_cmd_list.append("/d:"+form.domain_name.data)
+        # Check for FullScreen
+        if form.resolution_fullscreen :
+            freerdp_cmd_list.append("/f:")
+        # Check for Multimonitor
+        if form.resolution_multimon.data:
+            freerdp_cmd_list.append("/multimon")
+        # Check for Span monitor
+        if form.resolution_span.data:
+            freerdp_cmd_list.append("/span")
+        # Check for Restricted admin mode
+        if form.restric_admin_mode.data:
+            freerdp_cmd_list.append("/restricted-admin")
+        # Check for float bar
+        if form.float_bar.data:
+            freerdp_cmd_list.append("/floatbar:sticky:on")
         else:
-            DISPLAY = "/w:800 /h:800"
-
-        if request.form.get("DisableNLA") == "yes":
-            NLA = "-sec-nla"
+            freerdp_cmd_list.append("/floatbar:sticky:off")
+        # Check for Network connection type
+        match form.network_connection_type.data:
+            case "none":
+                pass
+            case "auto":
+                freerdp_cmd_list.append("/network:auto")
+            case "modem":
+                freerdp_cmd_list.append("/network:modem")
+            case "broadband-low":
+                freerdp_cmd_list.append("/network:broadband-low")
+            case "broadband-high":
+                freerdp_cmd_list.append("/network:broadband-high")
+            case "wan":
+                freerdp_cmd_list.append("/network:wan")
+            case "lan":
+                freerdp_cmd_list.append("/network:lan")
+        # Check for NLA,RDP and TLS Security
+        # Check NLA
+        if form.sec_nla.data:
+            freerdp_cmd_list.append("+sec-nla")
         else:
-            NLA = "+sec-nla"
+            freerdp_cmd_list.append("-sec-nla")
+        # Check RDP
+        if form.sec_rdp.data:
+            freerdp_cmd_list.append("+sec-rdp")
+        else:
+            freerdp_cmd_list.append("-sec-rdp")
+        # Check TLS
+        if form.sec_tls.data:
+            freerdp_cmd_list.append("+sec-tls")
+        else:
+            freerdp_cmd_list.append("-sec-tls")
 
-        cmd_str = "xfreerdp /cert-ignore /bpp:24 "+DISPLAY+" "+NLA+" /sound:sys:pulse /microphone:sys:pulse /t:"+request.form.get("connection_name")+" /v:"+request.form.get("server_address")
-        freerdp_dict["CMD"] = cmd_str
-        build_freerdp_cmd(freerdp_dict)
+        # Add Sound, Title and Server
+        freerdp_cmd_list.append("/sound:sys:pulse")
+        freerdp_cmd_list.append("/microphone:sys:pulse")
+        freerdp_cmd_list.append("/t:"+form.connection_name.data)
+        freerdp_cmd_list.append("/v:"+form.server_address.data)
 
-        freerdp_db = ConnectionDB(connection_name=form.connection_name.data,address=form.server_address.data,protocol="FreeRDP",parameters=form.parameters.data)
+        print(freerdp_cmd_list)
+
+        # Build FreeRDP Script
+        build_freerdp_launch_script(form.connection_name.data,freerdp_cmd_list)
+        
+        # Add data into Connection DB for Dashboard
+        connection_db = ConnectionDB(connection_name=form.connection_name.data,address=form.server_address.data,protocol="FreeRDP")
+        db.session.add(connection_db)
+        db.session.commit()
+        # Add data into FreeRDP DB
+        freerdp_db = FreerdpDB(connection_name=form.connection_name.data,server=form.server_address.data,username=form.user_name.data,password=form.user_password.data,domain=form.domain_name.data,restricadminmode=form.restric_admin_mode.data,
+        resolutionfullscreen=form.resolution_fullscreen.data,resolutionmultimon=form.resolution_multimon.data,resolutionspan=form.resolution_span.data,
+        secnla=form.sec_nla.data,secrdp=form.sec_rdp.data,sectls=form.sec_tls.data,floatbar=form.float_bar.data,networkconnectiontype=form.network_connection_type.data)
         db.session.add(freerdp_db)
         db.session.commit()
+
         flash(f"FreeRDP connection {form.connection_name.data} created successfully",'success')
         return redirect(url_for('dashboard.dashboard'))
     return render_template('freerdp/freerdp.html',form=form,total_freerdp_conn=total_freerdp_conn,total_chrome_conn=total_chrome_conn)
@@ -64,16 +128,18 @@ def add_freerdp():
 # Delete FreeRDP Connection
 @freerdp_obj.route('/delete/freerdp/<int:connid>',methods=['GET','POST'])
 def delete_freerdp_conn(connid):
-    freerdp_connection_id = ConnectionDB.query.get_or_404(connid)
+    connection_db = ConnectionDB.query.get_or_404(connid)
+    freerdp_db = ConnectionDB.query.get_or_404(connid)
     # Delete connection environment dir
     GET_CURRENT_USER = os.path.expanduser('~')
     CONN_PATH = GET_CURRENT_USER+"/.webconnect/"
-    COONECTION_NAME = freerdp_connection_id.connection_name
+    COONECTION_NAME = connection_db.connection_name
     path = os.path.join(CONN_PATH,COONECTION_NAME)
     shutil.rmtree(path)
-    db.session.delete(freerdp_connection_id)
+    db.session.delete(connection_db)
+    db.session.delete(freerdp_db)
     db.session.commit()
-    flash(f"FreeRDP connection {freerdp_connection_id.connection_name} deleted successfully",'success')
+    flash(f"FreeRDP connection {connection_db.connection_name} deleted successfully",'success')
     return redirect(url_for('dashboard.dashboard'))
 
 # Edit FreeRDP Connection
@@ -84,11 +150,26 @@ def edit_freerdp(connid):
     total_freerdp_conn = len(ConnectionDB.query.filter_by(protocol="FreeRDP").all())
     # Total Google Chrome Connections
     total_chrome_conn = len(ConnectionDB.query.filter_by(protocol="Google Chrome").all())
-    freerdp_connection = ConnectionDB.query.get_or_404(connid)
+    connection_db = ConnectionDB.query.get_or_404(connid)
+    freerdp_db = FreerdpDB.query.get_or_404(connid)
+    
     if form.validate_on_submit():
-        freerdp_connection.address = form.server_address.data
-        freerdp_connection.parameters = form.parameters.data
+        freerdp_db.server = form.server_address.data
+        freerdp_db.user_name = form.user_name.data
+        freerdp_db.password = form.user_password.data
+        freerdp_db.password = form.user_password.data
+        freerdp_db.restricadminmode = form.restric_admin_mode.data
+        freerdp_db.resolutionfullscreen = form.resolution_fullscreen.data
+        freerdp_db.resolutionmultimon = form.resolution_multimon.data
+        freerdp_db.resolutionspan = form.resolution_span.data
+        freerdp_db.secnla = form.sec_nla.data
+        freerdp_db.secrdp = form.sec_rdp.data
+        freerdp_db.sectls = form.sec_tls.data
+        freerdp_db.floatbar = form.float_bar.data
+        print(form.network_connection_type.data)
+        freerdp_db.networkconnectiontype = form.network_connection_type.data
+        connection_db.address = form.server_address.data
         db.session.commit()
-        flash(f"FreeRDP connection {freerdp_connection.connection_name} updated successfully",'success')
+        flash(f"FreeRDP connection {connection_db.connection_name} updated successfully",'success')
         return redirect(url_for('dashboard.dashboard'))
-    return render_template('freerdp/edit_freerdp.html',form=form,freerdpconnection=freerdp_connection,total_freerdp_conn=total_freerdp_conn,total_chrome_conn=total_chrome_conn)
+    return render_template('freerdp/edit_freerdp.html',form=form,freerdpconnection=freerdp_db,total_freerdp_conn=total_freerdp_conn,total_chrome_conn=total_chrome_conn)

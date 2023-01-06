@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '878436c0a462c4145fa59eec2c43a66a'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///connectiondb.db'
-app.config['SQLALCHEMY_BINDS'] = {'connectiondb':'sqlite:///connectiondb.db'}
+app.config['SQLALCHEMY_BINDS'] = {'connectiondb':'sqlite:///connectiondb.db','freerdpdb':'sqlite:///freerdpdb.db'}
 db = SQLAlchemy(app)
 
 # Import Blueprint routes object
