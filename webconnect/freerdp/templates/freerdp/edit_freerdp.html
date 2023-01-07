@@ -14,35 +14,26 @@
             {{form.connection_name(class="form-control w-50",value=freerdpconnection.connection_name,readonly="readonly")}}
         </div>
         <div class="row mb-3">
-            {% if freerdpconnection.server == " " %}
-                <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Server</label>
-                {{form.server_address(class="form-control w-50")}}
-            {% else %}
-                <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Server</label>
-                {{form.server_address(class="form-control w-50",value=freerdpconnection.server)}}
-            {% endif %}
+          <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Server</label>
+          {{form.server_address(class="form-control w-50",value=freerdpconnection.server)}}  
         </div>
         <div class="row mb-3">
           <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Parameters</label>
-          <div class="col-sm-6">
-            <div class="accordion" id="accordionExample">
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="headingOne">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    Basic Settings
-                  </button>
-                </h2>
-                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                  <div class="accordion-body">
-                    <div class="row">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col">
+                <div class="card bg-light">
+                  <div class="card-header">Basic Settings</div>
+                  <div class="card-body">
+                    <div class="row g-3">
                       <div class="col-auto">
                         {% if freerdpconnection.resolutionfullscreen %}
-                            {{form.resolution_fullscreen(class="form-check-input",**{'checked':''})}}
-                            <label class="form-check-label" for="autoSizingCheck">FullScreen</label>
-                        {% else %}
-                            {{form.resolution_fullscreen(class="form-check-input")}}
-                            <label class="form-check-label" for="autoSizingCheck">FullScreen</label>
-                        {% endif %}
+		                      {{form.resolution_fullscreen(class="form-check-input",**{'checked':''})}}
+		                      <label class="form-check-label" for="autoSizingCheck">FullScreen</label>
+		                    {% else %}
+		                      {{form.resolution_fullscreen(class="form-check-input")}}
+		                      <label class="form-check-label" for="autoSizingCheck">FullScreen</label>
+		                    {% endif %}
                       </div>
                       <div class="col-auto">
                         {% if freerdpconnection.resolutionmultimon %}
@@ -80,61 +71,53 @@
                             <label class="form-check-label" for="autoSizingCheck">Floatbar</label>
                         {% endif %}
                       </div>
-                  </div>
-                  <div class="row">
-                    <label class="col-form-label mt-3" for="autoSizingCheck">Network connection type</label>
-                    <div class="col-sm-5">
-                      <select class="form-select" name="select-network-connection" aria-label="Default select example">
-                        {% if freerdpconnection.networkconnectiontype == "none" %}
+                      <div class="col-auto form-floating">
+                        <select class="form-select" name="select-network-connection" aria-label="Default select example">
+                          {% if freerdpconnection.networkconnectiontype == "none" %}
                             <option value="none" selected>None</option>
-                        {% else %}
-                          <option value="none">None</option>
-                        {% endif %}
-                        
-                        {% if freerdpconnection.networkconnectiontype == "modem" %}
+                          {% else %}
+                            <option value="none">None</option>
+                          {% endif %}
+                          
+                          {% if freerdpconnection.networkconnectiontype == "auto" %}
+                            <option value="auto" selected>Auto</option>
+                          {% else %}
+                            <option value="auto">Auto</option>
+                          {% endif %}
+                          
+                          {% if freerdpconnection.networkconnectiontype == "modem" %}
                             <option value="modem" selected>Modem</option>
-                        {% else %}
-                          <option value="modem">Modem</option>
-                        {% endif %}
-
-                        {% if freerdpconnection.networkconnectiontype == "broadband-low" %}
+                          {% else %}
+                            <option value="modem">Modem</option>
+                          {% endif %}
+                          
+                          {% if freerdpconnection.networkconnectiontype == "broadband-low" %}
                             <option value="broadband-low" selected >Low performance broadband</option>
-                        {% else %}
-                          <option value="broadband-low">Low performance broadband</option>
-                        {% endif %}
-
-                        {% if freerdpconnection.networkconnectiontype == "broadband-high" %}
+                          {% else %}
+                            <option value="broadband-low">Low performance broadband</option>
+                          {% endif %}
+                          
+                          {% if freerdpconnection.networkconnectiontype == "broadband-high" %}
                             <option value="broadband-high" selected>High performance broadband</option>
-                        {% else %}
-                          <option value="broadband-high">High performance broadband</option>
-                        {% endif %}
+                          {% else %}
+                            <option value="broadband-high">High performance broadband</option>
+                          {% endif %}
 
-                        {% if freerdpconnection.networkconnectiontype == "wan" %}
+                          {% if freerdpconnection.networkconnectiontype == "wan" %}
                             <option value="wan" selected>WAN</option>
-                        {% else %}
-                          <option value="wan">WAN</option>
-                        {% endif %}
+                          {% else %}
+                            <option value="wan">WAN</option>
+                          {% endif %}
 
-                        {% if freerdpconnection.networkconnectiontype == "lan" %}
+                          {% if freerdpconnection.networkconnectiontype == "lan" %}
                             <option value="lan" selected>LAN</option>
-                        {% else %}
-                          <option value="lan">LAN</option>
-                        {% endif %}
-                      </select>
-                    </div>
-                  </div>
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="headingTwo">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    Advanced Settings
-                  </button>
-                </h2>
-                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                  <div class="accordion-body">
-                    <div class="row">
+                          {% else %}
+                            <option value="lan">LAN</option>
+                          {% endif %}
+                        </select>
+                        <label for="floatingSelect">Network connection type</label>
+                      </div>
+                      <div class="card-header">Advanced Settings</div>
                       <div class="col-auto">
                         {% if  freerdpconnection.secnla %}
                             {{form.sec_nla(class="form-check-input",**{'checked':''})}}
@@ -162,14 +145,15 @@
                             <label class="form-check-label" for="autoSizingCheck">Enable TLS protocol security</label>
                         {% endif %}
                       </div>
-                  </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        <div class="mb-3">
-            {{form.submit(class="btn btn-success btn-sm")}}
         </div>
+        <div class="mb-3">
+          {{form.submit(class="btn btn-success btn-sm")}}
+      </div>
     </form>
 {% endblock content %}

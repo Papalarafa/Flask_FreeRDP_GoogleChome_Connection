@@ -37,17 +37,13 @@
         </div>
         <div class="row mb-3">
           <label for="inputFreeRDPConnection" class="col-sm-2 col-form-label">Parameters</label>
-          <div class="col-sm-6">
-            <div class="accordion" id="accordionExample">
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="headingOne">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    Basic Settings
-                  </button>
-                </h2>
-                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                  <div class="accordion-body">
-                    <div class="row">
+          <div class="col-md-6">
+            <div class="row">
+              <div class="col">
+                <div class="card bg-light">
+                  <div class="card-header">Basic Settings</div>
+                  <div class="card-body">
+                    <div class="row g-3">
                       <div class="col-auto">
                         {{form.resolution_fullscreen(class="form-check-input")}}
                         <label class="form-check-label" for="autoSizingCheck">FullScreen</label>
@@ -68,33 +64,19 @@
                         {{form.float_bar(class="form-check-input")}}
                         <label class="form-check-label" for="autoSizingCheck">Floatbar</label>
                       </div>
-                  </div>
-                  <div class="row">
-                    <label class="col-form-label mt-3" for="autoSizingCheck">Network connection type</label>
-                    <div class="col-sm-5">
-                      <select class="form-select" name="select-network-connection" aria-label="Default select example">
-                        <option value="none">None</option>
-                        <option value="auto">Auto-detect</option>
-                        <option value="modem">Modem</option>
-                        <option value="broadband-low">Low performance broadband</option>
-                        <option value="broadband-high">High performance broadband</option>
-                        <option value="wan">WAN</option>
-                        <option value="lan">LAN</option>
-                      </select>
-                    </div>
-                  </div>
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="headingTwo">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    Advanced Settings
-                  </button>
-                </h2>
-                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                  <div class="accordion-body">
-                    <div class="row">
+                      <div class="col-auto form-floating">
+                        <select class="form-select" name="select-network-connection" aria-label="Default select example">
+                          <option value="none">None</option>
+                          <option value="auto">Auto-detect</option>
+                          <option value="modem">Modem</option>
+                          <option value="broadband-low">Low performance broadband</option>
+                          <option value="broadband-high">High performance broadband</option>
+                          <option value="wan">WAN</option>
+                          <option value="lan">LAN</option>
+                        </select>
+                        <label for="floatingSelect">Network connection type</label>
+                      </div>
+                      <div class="card-header">Advanced Settings</div>
                       <div class="col-auto">
                         {{form.sec_nla(class="form-check-input")}}
                         <label class="form-check-label" for="autoSizingCheck">Enable NLA protocol security</label>

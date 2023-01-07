@@ -13,7 +13,7 @@ class FreerdpDB(db.Model):
     __bind_key__ = 'freerdpdb'
     id = db.Column(db.Integer,primary_key=True)
     connection_name = db.Column(db.String(15),nullable=False)
-    server = db.Column(db.String(20))
+    server = db.Column(db.String(20),nullable=False)
     restricadminmode = db.Column(db.Boolean)
     resolutionfullscreen = db.Column(db.Boolean,default=True)
     resolutionmultimon = db.Column(db.Boolean,default=False)
