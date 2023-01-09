@@ -13,9 +13,11 @@ from webconnect.dashboard.routes import dashboard_blue
 from webconnect.freerdp.routes import freerdp_obj
 from webconnect.chrome.routes import chrome_obj
 from webconnect.install_updates.routes import installupdate_blue_obj
+from webconnect.launch.routes import launch_obj
 
 # Register Blueprint
 app.register_blueprint(dashboard.routes.dashboard_blue,url_prefix='/')
 app.register_blueprint(freerdp.routes.freerdp_obj,url_prefix='/')
 app.register_blueprint(chrome.routes.chrome_obj,url_prefix='/')
 app.register_blueprint(install_updates.routes.installupdate_blue_obj,url_prefix='/')
+app.register_blueprint(launch.routes.launch_obj,url_prefix='/')

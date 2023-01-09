@@ -32,11 +32,11 @@
                             {% if i.protocol == "FreeRDP" %}
                                 <a class="btn btn-sm btn-danger" href="{{url_for('freerdp.delete_freerdp_conn',connid=i.id)}}" role="button">Delete</a>
                                 <a class="btn btn-sm btn-secondary" href="{{url_for('freerdp.edit_freerdp',connid=i.id)}}" role="button">Edit</a>
-                                <a class="btn btn-sm btn-success" href="#" role="button">Launch</a>
+                                <a class="btn btn-sm btn-success" href="{{url_for('launch.connection_launch',protocol='FreeRDP',conn_name=i.connection_name,connid=i.id)}}" role="button">Launch</a>
                             {% else %}
                                 <a class="btn btn-sm btn-danger" href="{{url_for('chrome.delete_chrome_conn',connid=i.id)}}" role="button">Delete</a>
                                 <a class="btn btn-sm btn-secondary" href="{{url_for('chrome.edit_chrome',connid=i.id)}}" role="button">Edit</a>
-                                <a class="btn btn-sm btn-success" href="#" role="button">Launch</a>
+                                <a class="btn btn-sm btn-success" href="{{url_for('launch.connection_launch')}}" role="button">Launch</a>
                             {% endif %}
                         </td>
                     </tr>

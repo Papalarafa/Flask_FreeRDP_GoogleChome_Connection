@@ -1,6 +1,12 @@
 {% extends 'install_updates/layout.html'%}
 {% block content %}
-  <h6 class="border-bottom pb-2 mb-0">Current Installed Versions</h6>
+  <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{url_for('dashboard.dashboard')}}">Dashboard</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Install - Updates</li>
+    </ol>
+  </nav>
+  <h6 class="border-bottom pb-2 mb-0 pt-3">Current Installed Versions</h6>
   <!--FreeRDP-->
   {% if is_freerdp == "nop" %}
     <div class="d-flex text-muted pt-3">
@@ -13,7 +19,7 @@
     </div>
     <div class="alert alert-dark" role="alert">
       <p class="font-monospace">$ sudo apt-get update</p>
-      <p class="font-monospace">$ sudo apt-get install -y freerdp-x11</p>
+      <p class="font-monospace">$ sudo apt-get install -y freerdp2-x11</p>
     </div>
   {% else %}
     <div class="d-flex text-muted pt-3">

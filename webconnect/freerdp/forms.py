@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField,SubmitField,TextAreaField,PasswordField,BooleanField
+from wtforms import StringField,SubmitField,TextAreaField,PasswordField,BooleanField,RadioField
 from wtforms.validators import DataRequired,ValidationError
 from webconnect.models import ConnectionDB
 

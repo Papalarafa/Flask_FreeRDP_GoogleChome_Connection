@@ -50,10 +50,10 @@ def add_freerdp():
 
     if form.validate_on_submit():
         # FreeRDP Command List
-        freerdp_cmd_list = ["xfreerdp","/cert-ignore"]
+        freerdp_cmd_list = ["xfreerdp","/cert:ignore"]
         # Check for FullScreen
         if form.resolution_fullscreen.data :
-            freerdp_cmd_list.append("/f:")
+            freerdp_cmd_list.append("/f")
         # Check for Multimonitor
         if form.resolution_multimon.data:
             freerdp_cmd_list.append("/multimon")
@@ -90,19 +90,15 @@ def add_freerdp():
         # Check NLA
         if form.sec_nla.data:
             freerdp_cmd_list.append("+sec-nla")
-        else:
-            freerdp_cmd_list.append("-sec-nla")
+        
         # Check RDP
         if form.sec_rdp.data:
             freerdp_cmd_list.append("+sec-rdp")
-        else:
-            freerdp_cmd_list.append("-sec-rdp")
+        
         # Check TLS
         if form.sec_tls.data:
             freerdp_cmd_list.append("+sec-tls")
-        else:
-            freerdp_cmd_list.append("-sec-tls")
-
+        
         # Add Sound, Title and Server
         freerdp_cmd_list.append("/sound:sys:pulse")
         freerdp_cmd_list.append("/microphone:sys:pulse")
@@ -166,10 +162,10 @@ def edit_freerdp(connid):
     freerdp_db = FreerdpDB.query.get_or_404(connid)
     if form.validate_on_submit():
         # FreeRDP Command List
-        freerdp_cmd_list = ["xfreerdp","/cert-ignore"]
+        freerdp_cmd_list = ["xfreerdp","/cert:ignore"]
         # Check for FullScreen
         if form.resolution_fullscreen.data :
-            freerdp_cmd_list.append("/f:")
+            freerdp_cmd_list.append("/f")
         # Check for Multimonitor
         if form.resolution_multimon.data:
             freerdp_cmd_list.append("/multimon")
@@ -208,17 +204,19 @@ def edit_freerdp(connid):
             freerdp_cmd_list.append("+sec-nla")
         else:
             freerdp_cmd_list.append("-sec-nla")
-        # Check RDP
-        if form.sec_rdp.data:
-            freerdp_cmd_list.append("+sec-rdp")
-        else:
-            freerdp_cmd_list.append("-sec-rdp")
+
         # Check TLS
         if form.sec_tls.data:
-            freerdp_cmd_list.append("+sec-tls")
-        else:
-            freerdp_cmd_list.append("-sec-tls")
-
+            if "+sec-nla" in freerdp_cmd_list:
+                freerdp_cmd_list[freerdp_cmd_list.index("+sec-nla")] = "-sec-nla"
+            freerdp_cmd_list.append("/tls-seclevel:0")
+            freerdp_cmd_list.append("/timeout:80000")
+        
+        # Check RDP
+        if form.sec_rdp.data: 
+            freerdp_cmd_list.append("+sec-rdp")
+        
+        
         # Add Sound, Title and Server
         freerdp_cmd_list.append("/sound:sys:pulse")
         freerdp_cmd_list.append("/microphone:sys:pulse")
